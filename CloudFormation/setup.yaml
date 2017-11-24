@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  GDELTTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: link
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: link
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: pywren-workshop-gdelt-table
+
+  CommonCrawlTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: warc_file
+          AttributeType: S
+        -
+          AttributeName: search_str
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: warc_file
+          KeyType: HASH
+        -
+          AttributeName: search_str
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 25
+      TableName: pywren-workshop-common-crawl
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+    DeletionPolicy: Retain
+
+Outputs:
+  S3BucketName:
+    Value: !Ref 'S3Bucket'
+    Description: S3 Bucket to store Wordclouds
